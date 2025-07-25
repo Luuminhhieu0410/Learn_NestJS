@@ -15,10 +15,11 @@ import {
 import { Request, Response } from 'express';
 import { CreateCatDto } from './dto/create-cat.dto';
 import { UpdateCatDto } from './dto/update-cat.dto';
+import { CatsService } from './cats.service';
 @Controller({ path: '/cats' }) // localhost:3000/cats
 export class CatsController {
   // GET localhost:3000/cats
-
+  constructor(readonly catsService: CatsService) {}
   @Get('/express')
   get(@Req() request: Request, @Res() response: Response): Response {
     console.log(request);
@@ -44,10 +45,14 @@ export class CatsController {
     console.log(params.id);
     return `This action returns a #${params.id} cat`;
   }
-
+  @Get()
+  getAllCat() {
+    return this.catsService.findAll();
+  }
   @Post()
   async create(@Body() createCatDto: CreateCatDto) {
-    return 'This action adds a new cat';
+    console.log('create cat');
+    return { data: this.catsService.create(createCatDto), success: 'true' };
   }
   @Put(':id')
   update(@Param('id') id: string, @Body() updateCatDto: UpdateCatDto) {
