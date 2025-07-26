@@ -10,19 +10,31 @@ import {
   HttpException,
   BadRequestException,
   ForbiddenException,
+  ValidationPipe,
+  UsePipes,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { UpdateUserSchema, UpdateUserType } from './dto/update-user.dto';
 import { Exception_Custom } from 'src/exception/Exception';
+import { ZodValidationPipe } from 'src/validation/zod.validation.pipe';
 
+// @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  create(@Body(new ValidationPipe()) createUserDto: CreateUserDto) { // dùng Pipe này khi với định nghĩa DTO là class-validation
+    return createUserDto;
+  }
+
+  @Patch(':id')
+  update(
+    @Param('id') id: string,
+    @Body(new ZodValidationPipe(UpdateUserSchema)) updateUserDto: UpdateUserType, // dùng Pipe này khi định nghĩa DTO là Zod
+  ) {
+    return this.usersService.update(+id, updateUserDto);
   }
 
   @Get()
@@ -39,7 +51,7 @@ export class UsersController {
     //     cause: new Error('Error message'),
     //   },
     // );
-    
+
     //Option 2 : các exception có sẵn
     throw new ForbiddenException({ message123: 'Forbidden' },{cause: new Error('message string'), description:"description"});
 
@@ -52,11 +64,7 @@ export class UsersController {
     return this.usersService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }
-
+  
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
