@@ -63,6 +63,10 @@ export class CatsController {
   remove(@Param('id') id: string) {
     return `This action removes a #${id} cat`;
   }
+  @Post('/testmiddleware')
+  testmiddleware() {
+    return 'success';
+  }
 }
 
 //Sub-domain routing (in development need edit host file windows)
