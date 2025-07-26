@@ -8,10 +8,11 @@ import { CoreModule } from './core/core.module';
 import { ExpressMidlleware } from './middleware/express.middleware';
 import { LoggerMiddleware } from './middleware/logger.middleware';
 import { CatsController } from './cats/cats.controller';
+import { UsersModule } from './users/users.module';
 
 // import module
 @Module({
-  imports: [CatsModule],
+  imports: [CatsModule, UsersModule],
   // imports: [CoreModule], hoặc import như này
   controllers: [AppController],
   providers: [AppService],

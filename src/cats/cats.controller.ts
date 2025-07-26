@@ -11,6 +11,8 @@ import {
   Redirect,
   Req,
   Res,
+  HttpCode,
+  HttpStatus
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { CreateCatDto } from './dto/create-cat.dto';
