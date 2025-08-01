@@ -12,14 +12,15 @@ import {
   ForbiddenException,
   ValidationPipe,
   UsePipes,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserSchema, UpdateUserType } from './dto/update-user.dto';
 import { Exception_Custom } from 'src/exception/Exception';
 import { ZodValidationPipe } from 'src/validation/zod.validation.pipe';
+import { AuthGuard } from 'src/guard/auth.guard';
 
-// @UsePipes(new ValidationPipe({ transform: true }))
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
@@ -32,39 +33,22 @@ export class UsersController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body(new ZodValidationPipe(UpdateUserSchema)) updateUserDto: UpdateUserType, // dùng Pipe này khi định nghĩa DTO là Zod
+    @Body(new ZodValidationPipe(UpdateUserSchema))
+    updateUserDto: UpdateUserType, // dùng Pipe này khi định nghĩa DTO là Zod
   ) {
     return this.usersService.update(+id, updateUserDto);
   }
 
   @Get()
   findAll() {
-    // Option 1 : thủ công bằng HttpException
-    // throw new HttpException(
-    //   {
-    //     status: HttpStatus.FORBIDDEN,
-    //     message123: 'This is a custom message',
-    //     test: 'test',
-    //   },
-    //   HttpStatus.FORBIDDEN,
-    //   {
-    //     cause: new Error('Error message'),
-    //   },
-    // );
-
-    //Option 2 : các exception có sẵn
-    throw new ForbiddenException({ message123: 'Forbidden' },{cause: new Error('message string'), description:"description"});
-
-    //Option 3 : tạo class riêng
-    // throw new Exception_Custom('Forbidden', 'không thể truy cập', 403);
+    return this.usersService.findAll();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
-  }
+  // @Get(':id')
+  // findOne(@Param('id') id: string) {
+  //   return this.usersService.findOne(id);
+  // }
 
-  
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
