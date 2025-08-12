@@ -1,0 +1,26 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
+model point {
+  point   Float?  @db.Float
+  user_id String? @db.VarChar(255)
+  users   users?  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "point_ibfk_1")
+
+  @@index([user_id], map: "user_id")
+  @@ignore
+}
+
+model users {
+  id       String  @id @db.VarChar(200)
+  name     String? @db.VarChar(255)
+  email    String? @db.VarChar(100)
+  password String? @db.VarChar(255)
+  point    point[] @ignore
+}
