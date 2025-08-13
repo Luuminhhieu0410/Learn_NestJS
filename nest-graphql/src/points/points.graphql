@@ -1,0 +1,11 @@
+
+type Point {
+  user_id: User
+  point: Float
+}
+
+type Query {
+  point(id: String!): Point
+}
+
+
