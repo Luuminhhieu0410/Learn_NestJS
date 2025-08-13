@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { PointsModule } from './points/points.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
         },
       },
     }),
+    PointsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

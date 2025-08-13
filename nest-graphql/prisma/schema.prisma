@@ -7,14 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by Prisma Client.
 model point {
-  point   Float?  @db.Float
-  user_id String? @db.VarChar(255)
-  users   users?  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "point_ibfk_1")
-
-  @@index([user_id], map: "user_id")
-  @@ignore
+  point   Float? @db.Float
+  user_id String @id @unique(map: "PK_user_id123") @db.VarChar(255)
+  users   users  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "point_ibfk_1")
 }
 
 model users {
@@ -22,5 +18,5 @@ model users {
   name     String? @db.VarChar(255)
   email    String? @db.VarChar(100)
   password String? @db.VarChar(255)
-  point    point[] @ignore
+  point    point?
 }
